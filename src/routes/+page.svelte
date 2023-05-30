@@ -11,9 +11,10 @@
 
   let settings = {
     startTime: 0,
-    duration: 600,
+    duration: 200,
     baseRounds: 20,
     baseRadius: 30,
+    soundEnabled: false,
   };
   let canvas = null;
   let context = null;
@@ -38,13 +39,17 @@
   ];
 
   onMount(() => {
+    document.onvisibilitychange = () => (settings.soundEnabled = false);
+    canvas.onclick = () => (settings.soundEnabled = !settings.soundEnabled);
     settings.startTime = new Date().getTime();
-    canvas.width = window.innerWidth * 0.9;
-    canvas.height = window.innerHeight * 0.9;
+    canvas.width = window.innerWidth * 0.8;
+    canvas.height = window.innerHeight * 0.8;
     context = canvas.getContext("2d");
     arcsInfo = arcsInfo.map((color, index) => {
-      let audio = new Audio(`/assests/sound/note_${(1 + index) % 15}.wav`);
-      audio.volume = 0.42;
+      let audio = new Audio(
+        `https://assets.codepen.io/1468070/key-${index + 1}.wav`
+      );
+      audio.volume = 0.62;
       let rounds = settings.baseRounds + index * 2;
       let velocity = CalculateVelocity(settings.duration, rounds);
       let radius = CalculateRadius(
@@ -72,12 +77,14 @@
       context,
       { x: 0, y: canvas.height * 0.95 },
       { x: canvas.width, y: canvas.height * 0.95 },
-      "gray",
+      "#121212",
       12
     );
     arcsInfo.forEach((setting, index) => {
       if (setting.nextImpact <= currentTime) {
-        setting.audio.play();
+        if (settings.soundEnabled) {
+          setting.audio.play();
+        }
         setting.nextImpact = getNextImpactTime(
           setting.nextImpact,
           setting.velocity
@@ -108,16 +115,33 @@
 </script>
 
 <canvas id="canvas" bind:this={canvas} />
+<!-- svelte-ignore a11y-missing-attribute -->
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<img
+  id="toggle-music"
+  src="/assests/images/music-solid.svg"
+  on:click={() => (settings.soundEnabled = !settings.soundEnabled)}
+/>
 
 <style>
   #canvas {
-    width: 90%;
-    height: 90%;
+    width: 80%;
+    height: 80%;
     border-radius: 6px;
-    background-color: rgb(31, 26, 26);
+    background-color: transparent;
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+  }
+  #toggle-music {
+    width: 2rem;
+    height: 2rem;
+    position: fixed;
+    bottom: 5%;
+    left: 50%;
+    z-index: 4;
+    transform: translateX(-50%);
+    cursor: pointer;
   }
 </style>

@@ -11,7 +11,7 @@ export function drawArc(
   context.beginPath();
   context.arc(x, y, radius, start, end);
   if (action == "stroke") {
-    context.lineWidth = 2;
+    context.lineWidth = 1.5;
     context.strokeStyle = color;
     context.stroke();
   } else {
