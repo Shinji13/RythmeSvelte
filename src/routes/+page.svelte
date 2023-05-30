@@ -11,7 +11,7 @@
 
   let settings = {
     startTime: 0,
-    duration: 200,
+    duration: 600,
     baseRounds: 20,
     baseRadius: 30,
     soundEnabled: false,
