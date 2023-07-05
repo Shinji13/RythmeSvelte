@@ -11,7 +11,7 @@
 
   let settings = {
     startTime: 0,
-    duration: 600,
+    duration: 700,
     baseRounds: 20,
     baseRadius: 30,
     soundEnabled: false,
@@ -119,7 +119,9 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <img
   id="toggle-music"
-  src="/assests/images/music-solid.svg"
+  src={settings.soundEnabled
+    ? "/assests/images/musicOff.svg"
+    : "/assests/images/musicOn.svg"}
   on:click={() => (settings.soundEnabled = !settings.soundEnabled)}
 />
 
